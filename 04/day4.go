@@ -6,17 +6,66 @@ import (
 	"io"
 	"log"
 	"os"
+	"slices"
 	"strings"
 )
 
 func main() {
 	fmt.Println("Day 4 Advent of Code")
 	input := GetInput()
-	fmt.Println(input)
+	paddedInput := Pad2dArray(input)
+	totalRolls := 0
+	for _, line := range(paddedInput) {
+		// display grid
+		fmt.Println(line)
+	}
+	
+	for i := 1; i < len(paddedInput) - 1; i++ {
+		for j := 1; j < len(paddedInput[i]) - 1; j++ {
+			totalRolls += CheckAdjacents(&paddedInput, i, j)
+		}
+	}
+
+	fmt.Println("Total rolls:", totalRolls)
+}
+
+func CheckAdjacents(gridPtr *[][]string, y int, x int) int {
+	grid := *gridPtr
+	if grid[y][x] == "@" {
+		adjacentRolls := 0
+		for i := y - 1; i <= y + 1; i++ {
+			for j := x - 1; j <= x + 1; j++ {
+				if grid[i][j] == "@" {
+					adjacentRolls++
+					if adjacentRolls > 4 {
+						return 0
+					}
+				}
+			}
+		}
+		return 1
+	}
+	return 0
+}
+
+func Pad2dArray(toPad [][]string) [][]string {
+	var padded [][]string
+	topAndBottomRow := make([]string, len(toPad[0]) + 2)
+	for i := range(topAndBottomRow) {
+		topAndBottomRow[i] = "."
+	}
+	padded = append(padded, topAndBottomRow)
+	for _, row := range(toPad) {
+		paddedRow := slices.Insert(row, 0, ".")
+		paddedRow = append(paddedRow, ".")
+		padded = append(padded, paddedRow)
+	}
+	padded = append(padded, topAndBottomRow)
+	return padded
 }
 
 func GetInput() [][]string {
-	file, err := os.Open("input_test.txt")
+	file, err := os.Open("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
