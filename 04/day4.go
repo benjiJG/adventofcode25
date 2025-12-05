@@ -15,27 +15,34 @@ func main() {
 	input := GetInput()
 	paddedInput := Pad2dArray(input)
 	totalRolls := 0
-	for _, line := range(paddedInput) {
-		// display grid
-		fmt.Println(line)
-	}
-	
-	for i := 1; i < len(paddedInput) - 1; i++ {
-		for j := 1; j < len(paddedInput[i]) - 1; j++ {
-			totalRolls += CheckAdjacents(&paddedInput, i, j)
+	for {
+		accessibleRolls := 0
+		for _, line := range(paddedInput) {
+			// display grid
+			fmt.Println(line)
+		}
+		
+		for i := 1; i < len(paddedInput) - 1; i++ {
+			for j := 1; j < len(paddedInput[i]) - 1; j++ {
+				accessibleRolls += CheckAdjacents(&paddedInput, i, j)
+			}
+		}
+
+		totalRolls += accessibleRolls
+
+		fmt.Println("Total rolls:", totalRolls)
+		if accessibleRolls <= 0 {
+			break;
 		}
 	}
-
-	fmt.Println("Total rolls:", totalRolls)
 }
 
 func CheckAdjacents(gridPtr *[][]string, y int, x int) int {
-	grid := *gridPtr
-	if grid[y][x] == "@" {
+	if (*gridPtr)[y][x] == "@" {
 		adjacentRolls := 0
 		for i := y - 1; i <= y + 1; i++ {
 			for j := x - 1; j <= x + 1; j++ {
-				if grid[i][j] == "@" {
+				if (*gridPtr)[i][j] == "@" {
 					adjacentRolls++
 					if adjacentRolls > 4 {
 						return 0
@@ -43,6 +50,7 @@ func CheckAdjacents(gridPtr *[][]string, y int, x int) int {
 				}
 			}
 		}
+		(*gridPtr)[y][x] = "."
 		return 1
 	}
 	return 0
