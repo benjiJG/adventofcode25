@@ -12,6 +12,18 @@ import (
 
 func main() {
 	input := GetInput()
+	
+	// PartOne(input)
+	PartTwo(input)
+}
+
+func PartTwo(input [][]string) {
+	for _, v := range input {
+		fmt.Println(v)
+	}
+}
+
+func PartOne(input [][]string) {
 	totalSum := 0
 
 	for i := 0; i < len(input[0]); i++ {
@@ -38,12 +50,11 @@ func main() {
 		}
 		totalSum += curSum
 	}
-	
 	fmt.Println("Total:", totalSum)
 }
 
 func GetInput() [][]string {
-	file, err := os.Open("input.txt")
+	file, err := os.Open("input_test.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
